@@ -1,0 +1,11 @@
+# venv
+venv
+
+# env variables
+.env
+
+# pycache
+*/__pycache__
+*.pyc
+__pycache__
+
