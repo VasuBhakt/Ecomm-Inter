@@ -71,23 +71,6 @@ To make this production-ready for an enterprise scale, the following improvement
 
 ---
 
-## 🛠️ Development Setup
-
-### Backend
-
-1. Create a virtual environment: `python -m venv .venv`
-2. Install dependencies: `pip install -r requirements.txt`
-3. Configure `.env` with `NEONDB_DATABASE_URL` and `JWT_ACCESS_SECRET`.
-4. Run migrations: `alembic upgrade head`
-5. Start server: `python main.py`
-
-### Frontend
-
-1. Install packages: `npm install`
-2. Start dev server: `npm run dev`
-
----
-
 ## 📄 API Documentation
 
 Once the backend is running, you can access the interactive Swagger documentation at:
