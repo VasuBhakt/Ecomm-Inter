@@ -5,13 +5,19 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useAuth } from "@/hooks/useAuth";
 import ProductService from "@/services/product/service";
-import { ProductAddRequest, ProductResponse, ProductModifyRequest } from "@/services/product/schema";
+import {
+  ProductAddRequest,
+  ProductResponse,
+  ProductModifyRequest,
+} from "@/services/product/schema";
 
 export default function SellerProductsPage() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<ProductResponse | null>(null);
+  const [editingProduct, setEditingProduct] = useState<ProductResponse | null>(
+    null,
+  );
   const [page, setPage] = useState(1);
   const LIMIT = 10;
 
@@ -21,10 +27,17 @@ export default function SellerProductsPage() {
     enabled: !!user?.id,
   });
 
-  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<ProductAddRequest>();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm<ProductAddRequest>();
 
   const addProductMutation = useMutation({
-    mutationFn: (newProduct: ProductAddRequest) => ProductService.addProduct(newProduct),
+    mutationFn: (newProduct: ProductAddRequest) =>
+      ProductService.addProduct(newProduct),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["seller-products"] });
       closeModal();
@@ -32,7 +45,7 @@ export default function SellerProductsPage() {
   });
 
   const editProductMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: ProductModifyRequest }) => 
+    mutationFn: ({ id, data }: { id: string; data: ProductModifyRequest }) =>
       ProductService.modifyProduct(data, id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["seller-products"] });
@@ -78,8 +91,12 @@ export default function SellerProductsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10">
           <div>
-            <h1 className="text-3xl font-black tracking-tight text-black uppercase">My Inventory</h1>
-            <p className="text-zinc-500 text-sm mt-1">Manage and track your listed products.</p>
+            <h1 className="text-3xl font-black tracking-tight text-black uppercase">
+              My Inventory
+            </h1>
+            <p className="text-zinc-500 text-sm mt-1">
+              Manage and track your listed products.
+            </p>
           </div>
           <button
             onClick={() => {
@@ -97,51 +114,84 @@ export default function SellerProductsPage() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-zinc-50 border-b border-black/5">
-                <th className="px-6 py-4 text-xs font-black uppercase tracking-widest text-zinc-400">Product Details</th>
-                <th className="px-6 py-4 text-xs font-black uppercase tracking-widest text-zinc-400">Price</th>
-                <th className="px-6 py-4 text-xs font-black uppercase tracking-widest text-zinc-400">Stock</th>
-                <th className="px-6 py-4 text-xs font-black uppercase tracking-widest text-zinc-400 text-right pr-10">Actions</th>
+                <th className="px-6 py-4 text-xs font-black uppercase tracking-widest text-zinc-400">
+                  Product Details
+                </th>
+                <th className="px-6 py-4 text-xs font-black uppercase tracking-widest text-zinc-400">
+                  Price
+                </th>
+                <th className="px-6 py-4 text-xs font-black uppercase tracking-widest text-zinc-400">
+                  Stock
+                </th>
+                <th className="px-6 py-4 text-xs font-black uppercase tracking-widest text-zinc-400 text-right pr-10">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-black/5">
               {isLoading ? (
                 [...Array(5)].map((_, i) => (
                   <tr key={i} className="animate-pulse">
-                    <td className="px-6 py-6"><div className="h-4 bg-zinc-100 rounded w-1/2"></div></td>
-                    <td className="px-6 py-6"><div className="h-4 bg-zinc-100 rounded w-1/4"></div></td>
-                    <td className="px-6 py-6"><div className="h-4 bg-zinc-100 rounded w-1/4"></div></td>
-                    <td className="px-6 py-6"><div className="h-4 bg-zinc-100 rounded w-1/4"></div></td>
+                    <td className="px-6 py-6">
+                      <div className="h-4 bg-zinc-100 rounded w-1/2"></div>
+                    </td>
+                    <td className="px-6 py-6">
+                      <div className="h-4 bg-zinc-100 rounded w-1/4"></div>
+                    </td>
+                    <td className="px-6 py-6">
+                      <div className="h-4 bg-zinc-100 rounded w-1/4"></div>
+                    </td>
+                    <td className="px-6 py-6">
+                      <div className="h-4 bg-zinc-100 rounded w-1/4"></div>
+                    </td>
                   </tr>
                 ))
               ) : products.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-zinc-500 font-medium">
-                    No products listed yet. Click "Add New Product" to get started.
+                  <td
+                    colSpan={4}
+                    className="px-6 py-12 text-center text-zinc-500 font-medium"
+                  >
+                    No products listed yet. Click "Add New Product" to get
+                    started.
                   </td>
                 </tr>
               ) : (
                 products.map((product) => (
-                  <tr key={product.id} className="hover:bg-zinc-50 transition-colors">
+                  <tr
+                    key={product.id}
+                    className="hover:bg-zinc-50 transition-colors"
+                  >
                     <td className="px-6 py-6">
                       <div className="font-bold text-black">{product.name}</div>
-                      <div className="text-xs text-zinc-500 mt-1 line-clamp-1">{product.description}</div>
+                      <div className="text-xs text-zinc-500 mt-1 line-clamp-1">
+                        {product.description}
+                      </div>
                     </td>
-                    <td className="px-6 py-6 text-sm font-bold text-black">Rs. {product.price}</td>
+                    <td className="px-6 py-6 text-sm font-bold text-black">
+                      Rs. {product.price}
+                    </td>
                     <td className="px-6 py-6">
-                      <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full ${product.stock > 0 ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+                      <span
+                        className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full ${product.stock > 0 ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}
+                      >
                         {product.stock} in stock
                       </span>
                     </td>
                     <td className="px-6 py-6 text-right pr-10 space-x-4">
-                      <button 
+                      <button
                         onClick={() => openEditModal(product)}
                         className="text-xs font-black uppercase tracking-widest text-black border-b-2 border-transparent hover:border-black transition-all cursor-pointer"
                       >
                         Edit
                       </button>
-                      <button 
+                      <button
                         onClick={() => {
-                          if (confirm("Are you sure you want to delete this product?")) {
+                          if (
+                            confirm(
+                              "Are you sure you want to delete this product?",
+                            )
+                          ) {
                             deleteProductMutation.mutate(product.id);
                           }
                         }}
@@ -159,20 +209,20 @@ export default function SellerProductsPage() {
 
         {/* Pagination placeholder */}
         <div className="mt-8 flex justify-center gap-2">
-           <button 
+          <button
             disabled={page === 1}
-            onClick={() => setPage(p => p - 1)}
+            onClick={() => setPage((p) => p - 1)}
             className="px-4 py-2 border border-black/10 rounded text-xs font-bold disabled:opacity-30"
-           >
+          >
             Prev
-           </button>
-           <button 
+          </button>
+          <button
             disabled={products.length < LIMIT}
-            onClick={() => setPage(p => p + 1)}
+            onClick={() => setPage((p) => p + 1)}
             className="px-4 py-2 border border-black/10 rounded text-xs font-bold disabled:opacity-30"
-           >
+          >
             Next
-           </button>
+          </button>
         </div>
       </div>
 
@@ -182,49 +232,80 @@ export default function SellerProductsPage() {
           <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl p-8 space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-black tracking-tight text-black uppercase">
-                {editingProduct ? 'Edit Product' : 'Add New Product'}
+                {editingProduct ? "Edit Product" : "Add New Product"}
               </h2>
-              <button onClick={closeModal} className="text-zinc-400 hover:text-black transition-colors">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+              <button
+                onClick={closeModal}
+                className="text-zinc-400 hover:text-black transition-colors"
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  ></path>
+                </svg>
               </button>
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-1">
-                <label className="text-xs font-black uppercase tracking-widest text-zinc-500">Product Name</label>
-                <input 
+                <label className="text-xs font-black uppercase tracking-widest text-zinc-500">
+                  Product Name
+                </label>
+                <input
                   {...register("name", { required: "Name is required" })}
-                  className="w-full px-4 py-3 bg-zinc-50 border border-transparent rounded-xl focus:bg-white focus:border-black outline-none transition-all placeholder:text-zinc-400" 
+                  className="w-full px-4 py-3 bg-zinc-50 border border-transparent rounded-xl focus:bg-white focus:border-black outline-none transition-all placeholder:text-zinc-400"
                   placeholder="Premium Leather Wallet"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-black uppercase tracking-widest text-zinc-500">Description</label>
-                <textarea 
-                  {...register("description", { required: "Description is required" })}
-                  className="w-full px-4 py-3 bg-zinc-50 border border-transparent rounded-xl focus:bg-white focus:border-black outline-none transition-all placeholder:text-zinc-400 h-32" 
+                <label className="text-xs font-black uppercase tracking-widest text-zinc-500">
+                  Description
+                </label>
+                <textarea
+                  {...register("description", {
+                    required: "Description is required",
+                  })}
+                  className="w-full px-4 py-3 bg-zinc-50 border border-transparent rounded-xl focus:bg-white focus:border-black outline-none transition-all placeholder:text-zinc-400 h-32"
                   placeholder="Handcrafted from top-grain leather..."
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs font-black uppercase tracking-widest text-zinc-500">Price ($)</label>
-                  <input 
+                  <label className="text-xs font-black uppercase tracking-widest text-zinc-500">
+                    Price (Rs.)
+                  </label>
+                  <input
                     type="number"
                     step="0.01"
-                    {...register("price", { required: "Price is required", valueAsNumber: true })}
-                    className="w-full px-4 py-3 bg-zinc-50 border border-transparent rounded-xl focus:bg-white focus:border-black outline-none transition-all" 
+                    {...register("price", {
+                      required: "Price is required",
+                      valueAsNumber: true,
+                    })}
+                    className="w-full px-4 py-3 bg-zinc-50 border border-transparent rounded-xl focus:bg-white focus:border-black outline-none transition-all"
                     placeholder="99.99"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-black uppercase tracking-widest text-zinc-500">Stock Count</label>
-                  <input 
+                  <label className="text-xs font-black uppercase tracking-widest text-zinc-500">
+                    Stock Count
+                  </label>
+                  <input
                     type="number"
-                    {...register("stock", { required: "Stock is required", valueAsNumber: true })}
-                    className="w-full px-4 py-3 bg-zinc-50 border border-transparent rounded-xl focus:bg-white focus:border-black outline-none transition-all" 
+                    {...register("stock", {
+                      required: "Stock is required",
+                      valueAsNumber: true,
+                    })}
+                    className="w-full px-4 py-3 bg-zinc-50 border border-transparent rounded-xl focus:bg-white focus:border-black outline-none transition-all"
                     placeholder="50"
                   />
                 </div>
@@ -232,10 +313,16 @@ export default function SellerProductsPage() {
 
               <button
                 type="submit"
-                disabled={addProductMutation.isPending || editProductMutation.isPending}
+                disabled={
+                  addProductMutation.isPending || editProductMutation.isPending
+                }
                 className="w-full py-4 bg-black text-white font-black uppercase tracking-widest rounded-xl hover:bg-zinc-800 transition-all disabled:bg-zinc-300 mt-4"
               >
-                {addProductMutation.isPending || editProductMutation.isPending ? 'Processing...' : editingProduct ? 'Update Product' : 'Publish Product'}
+                {addProductMutation.isPending || editProductMutation.isPending
+                  ? "Processing..."
+                  : editingProduct
+                    ? "Update Product"
+                    : "Publish Product"}
               </button>
             </form>
           </div>

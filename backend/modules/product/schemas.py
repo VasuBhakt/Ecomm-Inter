@@ -21,6 +21,6 @@ class ProductResponse(BaseModel):
     id: str
     name: str
     description: str
-    price: int
+    price: float
     stock: int
     seller_id: str

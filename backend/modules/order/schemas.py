@@ -18,7 +18,7 @@ class OrderResponse(BaseModel):
     product_id: str
     product_name: Optional[str] = None
     quantity: int
-    total_amount: int
+    total_amount: float
     buyer_id: str
     status: str
     created_at: datetime

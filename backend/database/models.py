@@ -4,6 +4,7 @@ from uuid import uuid4
 from sqlalchemy import (
     Column,
     Integer,
+    Float,
     String,
     ForeignKey,
     DateTime,
@@ -49,7 +50,9 @@ class User(Base):
 
     # Relationships
     orders = relationship("Order", back_populates="buyer", cascade="all, delete-orphan")
-    products = relationship("Product", back_populates="seller", cascade="all, delete-orphan")
+    products = relationship(
+        "Product", back_populates="seller", cascade="all, delete-orphan"
+    )
 
 
 class Product(Base):
@@ -60,14 +63,16 @@ class Product(Base):
     )
     name = Column(String, nullable=False)
     description = Column(String, nullable=False)
-    price = Column(Integer, nullable=False)
+    price = Column(Float, nullable=False)
     stock = Column(Integer, default=0)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relationships
     seller = relationship("User", back_populates="products")
-    orders = relationship("Order", back_populates="product", cascade="all, delete-orphan")
+    orders = relationship(
+        "Order", back_populates="product", cascade="all, delete-orphan"
+    )
 
 
 class Order(Base):
@@ -80,7 +85,7 @@ class Order(Base):
         String, ForeignKey("products.id", ondelete="CASCADE"), nullable=False
     )
     quantity = Column(Integer, nullable=False)
-    total_amount = Column(Integer, nullable=False)
+    total_amount = Column(Float, nullable=False)
     status = Column(SQLEnum(OrderStatus), default=OrderStatus.PENDING)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
