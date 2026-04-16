@@ -36,6 +36,7 @@ The backend utilizes a **Modular Controller-Service-Repository** pattern for mai
 - **Users**: Implements Role-Based Access Control (RBAC).
 - **Products**: Tracked by seller identity and current stock levels.
 - **Orders**: Transactional records ensuring data integrity between order volume and product inventory.
+  <img src="./backend/db_diagram.png" alt="DB DIAGRAM">
 
 ### 2. Implementation Highlights
 
