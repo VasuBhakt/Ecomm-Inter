@@ -55,7 +55,7 @@ class Product(Base):
     __tablename__ = "products"
     id = Column(String, primary_key=True, index=True, default=generate_uuid)
     seller_id = Column(
-        String, ForeignKey("users.id"), nullable=False, ondelete="CASCADE"
+        String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
     name = Column(String, nullable=False)
     description = Column(String, nullable=False)
@@ -73,10 +73,10 @@ class Order(Base):
     __tablename__ = "orders"
     id = Column(String, primary_key=True, index=True, default=generate_uuid)
     buyer_id = Column(
-        String, ForeignKey("users.id"), nullable=False, ondelete="CASCADE"
+        String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
     product_id = Column(
-        String, ForeignKey("products.id"), nullable=False, ondelete="CASCADE"
+        String, ForeignKey("products.id", ondelete="CASCADE"), nullable=False
     )
     quantity = Column(Integer, nullable=False)
     total_amount = Column(Integer, nullable=False)
