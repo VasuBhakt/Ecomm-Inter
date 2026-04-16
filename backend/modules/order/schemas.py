@@ -10,7 +10,7 @@ class OrderAddRequest(BaseModel):
 
 
 class OrderModifyRequest(BaseModel):
-    quantity: int
+    quantity: Optional[int] = None
 
 
 class OrderResponse(BaseModel):
