@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from utils import UserDetails
 from typing import Optional
+from datetime import datetime
 
 
 class OrderAddRequest(BaseModel):
@@ -18,5 +19,5 @@ class OrderResponse(BaseModel):
     quantity: int
     buyer_id: str
     status: str
-    created_at: str
-    updated_at: str
+    created_at: datetime
+    updated_at: datetime

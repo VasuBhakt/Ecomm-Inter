@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_db
 from .schemas import ProductAddRequest, ProductModifyRequest
 from .service import ProductService
-from utils import APIResponse, DependenciesService
+from utils import APIResponse, DependenciesService, APIException
 
 product_router = APIRouter(prefix="/product", tags=["Product"])
 

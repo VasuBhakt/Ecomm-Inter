@@ -13,9 +13,9 @@ from sqlalchemy import (
     Enum as SQLEnum,
 )
 from sqlalchemy.dialects.postgresql import ARRAY, JSONB
-from sqlalchemy.orm import relationship, declarative_base
+from sqlalchemy.orm import relationship
+from .database import Base
 
-Base = declarative_base()
 
 
 # Helper for UUID strings

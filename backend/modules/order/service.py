@@ -36,13 +36,13 @@ class OrderService:
                 "Insufficient stock", status=400, error_code="INSUFFICIENT_STOCK"
             )
         product.stock -= request.quantity
-        new_order = OrderResponse(
+        total_amount = product.price * request.quantity
+        new_order = Order(
             product_id=request.product_id,
             quantity=request.quantity,
             buyer_id=buyer_id,
             status="pending",
-            created_at=datetime.now().isoformat(),
-            updated_at=datetime.now().isoformat(),
+            total_amount=total_amount,
         )
         try:
             db.add(new_order)
@@ -85,15 +85,18 @@ class OrderService:
                 )
             product.stock -= request.quantity
             order.quantity = request.quantity
-        try:
+            order.total_amount = product.price * request.quantity
             db.add(product)
+        try:
             db.add(order)
             await db.commit()
             await db.refresh(order)
-            await db.refresh(product)
+            if request.quantity:
+                await db.refresh(product)
             return "Order modified successfully"
         except Exception as e:
             await db.rollback()
+            logger.error(f"Error modifying order: {e}")
             raise APIException(
                 "Failed to modify order",
                 status=500,

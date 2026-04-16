@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_db
 from .schemas import OrderAddRequest, OrderModifyRequest, OrderResponse
 from .service import OrderService
-from utils import DependenciesService, APIResponse
+from utils import DependenciesService, APIResponse, APIException
 
 order_router = APIRouter(prefix="/order", tags=["Order"])
 
@@ -22,7 +22,9 @@ async def add_order(
     request: Request,
     db: AsyncSession = Depends(get_db),
     order_service: OrderService = Depends(get_order_service),
-    dependencies_service: DependenciesService = Depends(get_dependencies_service),
+    dependencies_service: DependenciesService = Depends(
+        get_dependencies_service().verifyJWT
+    ),
 ) -> APIResponse:
     if not request.state.user:
         raise APIException(
@@ -47,7 +49,9 @@ async def modify_order(
     request: Request,
     db: AsyncSession = Depends(get_db),
     order_service: OrderService = Depends(get_order_service),
-    dependencies_service: DependenciesService = Depends(get_dependencies_service),
+    dependencies_service: DependenciesService = Depends(
+        get_dependencies_service().verifyJWT
+    ),
 ) -> APIResponse:
     if not request.state.user:
         raise APIException(
@@ -67,7 +71,9 @@ async def delete_order(
     request: Request,
     db: AsyncSession = Depends(get_db),
     order_service: OrderService = Depends(get_order_service),
-    dependencies_service: DependenciesService = Depends(get_dependencies_service),
+    dependencies_service: DependenciesService = Depends(
+        get_dependencies_service().verifyJWT
+    ),
 ) -> APIResponse:
     if not request.state.user:
         raise APIException(
@@ -85,7 +91,9 @@ async def get_order(
     request: Request,
     db: AsyncSession = Depends(get_db),
     order_service: OrderService = Depends(get_order_service),
-    dependencies_service: DependenciesService = Depends(get_dependencies_service),
+    dependencies_service: DependenciesService = Depends(
+        get_dependencies_service().verifyJWT
+    ),
 ) -> APIResponse:
     if not request.state.user:
         raise APIException(
@@ -103,7 +111,9 @@ async def get_orders_by_buyer(
     request: Request,
     db: AsyncSession = Depends(get_db),
     order_service: OrderService = Depends(get_order_service),
-    dependencies_service: DependenciesService = Depends(get_dependencies_service),
+    dependencies_service: DependenciesService = Depends(
+        get_dependencies_service().verifyJWT
+    ),
 ) -> APIResponse:
     if not request.state.user:
         raise APIException(
