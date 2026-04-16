@@ -94,6 +94,7 @@ class ProductService:
             raise APIException(
                 "Product not found", status=404, error_code="PRODUCT_NOT_FOUND"
             )
+        logger.info(f"Product found: {product}")
         try:
             await db.delete(product)
             await db.commit()
@@ -118,6 +119,7 @@ class ProductService:
             raise APIException(
                 "Product not found", status=404, error_code="PRODUCT_NOT_FOUND"
             )
+
         return ProductResponse(
             id=product.id,
             name=product.name,
@@ -148,9 +150,16 @@ class ProductService:
     async def get_products_by_seller(
         self,
         seller_id: str,
+        page: int = 1,
+        limit: int = 10,
         db: AsyncSession = Depends(get_db),
     ) -> list[ProductResponse]:
-        query = select(Product).where(Product.seller_id == seller_id)
+        query = (
+            select(Product)
+            .where(Product.seller_id == seller_id)
+            .offset((page - 1) * limit)
+            .limit(limit)
+        )
         result = await db.execute(query)
         products = result.scalars().all()
         return [

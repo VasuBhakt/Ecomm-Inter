@@ -57,14 +57,39 @@ class ProductService {
       throw error;
     }
   }
-  async getProducts(): Promise<APIResponse<ProductResponse[]>> {
+  async getProducts(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<APIResponse<ProductResponse[]>> {
     try {
       logger.info("Get products flow started...");
-      const response = await axios.get("/product");
+      const response = await axios.get("/product", {
+        params: {
+          page,
+          limit,
+        },
+      });
       logger.info("Get products successful!");
       return response.data;
     } catch (error) {
       logger.error("Get products failed :: error :: ", error);
+      throw error;
+    }
+  }
+  async getProductsBySeller(
+    sellerId: string,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<APIResponse<ProductResponse[]>> {
+    try {
+      logger.info("Get products by seller flow started...");
+      const response = await axios.get(`/product/seller/${sellerId}`, {
+        params: { page, limit },
+      });
+      logger.info("Get products by seller successful!");
+      return response.data;
+    } catch (error) {
+      logger.error("Get products by seller failed :: error :: ", error);
       throw error;
     }
   }

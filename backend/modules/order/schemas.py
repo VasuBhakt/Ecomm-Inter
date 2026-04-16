@@ -16,7 +16,9 @@ class OrderModifyRequest(BaseModel):
 class OrderResponse(BaseModel):
     id: str
     product_id: str
+    product_name: Optional[str] = None
     quantity: int
+    total_amount: int
     buyer_id: str
     status: str
     created_at: datetime

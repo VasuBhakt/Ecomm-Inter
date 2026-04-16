@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Response, Request
+from fastapi import APIRouter, Depends, Response, Request, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_db
 from .schemas import ProductAddRequest, ProductModifyRequest
@@ -105,10 +105,12 @@ async def get_all_products(
 @product_router.get("/seller/{seller_id}")
 async def get_products_by_seller(
     seller_id: str,
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=100),
     db: AsyncSession = Depends(get_db),
     product_service: ProductService = Depends(get_product_service),
 ) -> APIResponse:
-    products = await product_service.get_products_by_seller(seller_id, db)
+    products = await product_service.get_products_by_seller(seller_id, page, limit, db)
     return APIResponse(
         message="Products fetched successfully", data=products, status=200
     )

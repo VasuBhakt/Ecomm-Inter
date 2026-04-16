@@ -36,6 +36,6 @@ if __name__ == "__main__":
         "main:app",
         host=os.getenv("HOST"),
         port=port,
-        reload=False,
+        reload=True,
         log_level="info",
     )

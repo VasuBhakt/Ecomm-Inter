@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Response, Request
+from fastapi import APIRouter, Depends, Response, Request, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_db
 from .schemas import OrderAddRequest, OrderModifyRequest, OrderResponse
@@ -109,6 +109,8 @@ async def get_order(
 async def get_orders_by_buyer(
     buyer_id: str,
     request: Request,
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=100),
     db: AsyncSession = Depends(get_db),
     order_service: OrderService = Depends(get_order_service),
     dependencies_service: DependenciesService = Depends(
@@ -121,5 +123,7 @@ async def get_orders_by_buyer(
             status=401,
             error_code="UNAUTHORIZED",
         )
-    orders = await order_service.get_orders_by_buyer(request.state.user.id, db)
+    orders = await order_service.get_all_orders_by_buyer(
+        request.state.user.id, page, limit, db
+    )
     return APIResponse(message="Orders fetched successfully", data=orders, status=200)

@@ -131,7 +131,7 @@ class OrderService:
             )
         product.stock += order.quantity
         try:
-            db.add(product)
+            await db.add(product)
             await db.delete(order)
             await db.commit()
             await db.refresh(product)
@@ -150,40 +150,56 @@ class OrderService:
         order_id: str,
         db: AsyncSession = Depends(get_db),
     ) -> OrderResponse:
-        query = select(Order).where(Order.id == order_id, Order.buyer_id == buyer_id)
+        query = (
+            select(Order, Product.name.label("product_name"))
+            .join(Product, Order.product_id == Product.id)
+            .where(Order.id == order_id, Order.buyer_id == buyer_id)
+        )
         result = await db.execute(query)
-        order = result.scalar_one_or_none()
-        if not order:
+        row = result.one_or_none()
+        if not row:
             raise APIException(
                 "Order not found", status=404, error_code="ORDER_NOT_FOUND"
             )
         return OrderResponse(
-            id=order.id,
-            product_id=order.product_id,
-            quantity=order.quantity,
-            buyer_id=order.buyer_id,
-            status=order.status,
-            created_at=order.created_at,
-            updated_at=order.updated_at,
+            id=row.Order.id,
+            product_id=row.Order.product_id,
+            product_name=row.product_name,
+            quantity=row.Order.quantity,
+            total_amount=row.Order.total_amount,
+            buyer_id=row.Order.buyer_id,
+            status=row.Order.status,
+            created_at=row.Order.created_at,
+            updated_at=row.Order.updated_at,
         )
 
     async def get_all_orders_by_buyer(
         self,
         buyer_id: str,
+        page: int = 1,
+        limit: int = 10,
         db: AsyncSession = Depends(get_db),
     ) -> list[OrderResponse]:
-        query = select(Order).where(Order.buyer_id == buyer_id)
+        query = (
+            select(Order, Product.name.label("product_name"))
+            .join(Product, Order.product_id == Product.id)
+            .where(Order.buyer_id == buyer_id)
+            .offset((page - 1) * limit)
+            .limit(limit)
+        )
         result = await db.execute(query)
-        orders = result.scalars().all()
+        rows = result.all()
         return [
             OrderResponse(
-                id=order.id,
-                product_id=order.product_id,
-                quantity=order.quantity,
-                buyer_id=order.buyer_id,
-                status=order.status,
-                created_at=order.created_at,
-                updated_at=order.updated_at,
+                id=row.Order.id,
+                product_id=row.Order.product_id,
+                product_name=row.product_name,
+                quantity=row.Order.quantity,
+                total_amount=row.Order.total_amount,
+                buyer_id=row.Order.buyer_id,
+                status=row.Order.status,
+                created_at=row.Order.created_at,
+                updated_at=row.Order.updated_at,
             )
-            for order in orders
+            for row in rows
         ]

@@ -10,9 +10,11 @@ export interface OrderModifyRequest {
 export interface OrderResponse {
   id: string;
   product_id: string;
+  product_name: string;
   quantity: number;
+  total_amount: number;
   buyer_id: string;
   status: string;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
 }

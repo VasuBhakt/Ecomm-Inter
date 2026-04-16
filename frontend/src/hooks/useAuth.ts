@@ -16,7 +16,11 @@ export const useAuth = () => {
     retry: false,
   });
 
-  // Mutations (Standard signin/signout)
+  // Mutations
+  const signupMutation = useMutation({
+    mutationFn: AuthService.signup,
+  });
+
   const signinMutation = useMutation({
     mutationFn: AuthService.signin,
     onSuccess: () => {
@@ -36,10 +40,14 @@ export const useAuth = () => {
     isSignedIn: !!user?.data,
     isLoading,
     isError,
+    signup: signupMutation.mutate,
+    signupAsync: signupMutation.mutateAsync,
+    signupStatus: signupMutation.status,
     signin: signinMutation.mutate,
     signinAsync: signinMutation.mutateAsync,
+    signinStatus: signinMutation.status,
     signout: signoutMutation.mutate,
     signoutAsync: signoutMutation.mutateAsync,
-    signinStatus: signinMutation.status,
+    signoutStatus: signoutMutation.status,
   };
 };

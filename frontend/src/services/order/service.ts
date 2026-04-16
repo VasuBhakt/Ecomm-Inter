@@ -52,10 +52,17 @@ class OrderService {
   }
   async getOrdersByBuyer(
     buyerId: string,
+    page: number = 1,
+    limit: number = 10,
   ): Promise<APIResponse<OrderResponse[]>> {
     try {
       logger.info("Get orders by buyer flow started...");
-      const response = await axios.get(`/order/buyer/${buyerId}`);
+      const response = await axios.get(`/order/buyer/${buyerId}`, {
+        params: {
+          page,
+          limit,
+        },
+      });
       logger.info("Get orders by buyer successful!");
       return response.data;
     } catch (error) {
