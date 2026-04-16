@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from .schemas import OrderAddRequest, OrderModifyRequest, OrderResponse
-from database import Order, Product, get_db
+from database import Order, Product, get_db, OrderStatus
 from utils import APIException
 import logging
 import os
@@ -116,7 +116,7 @@ class OrderService:
             raise APIException(
                 "Order not found", status=404, error_code="ORDER_NOT_FOUND"
             )
-        if order.status != "pending":
+        if order.status != OrderStatus.PENDING:
             raise APIException(
                 "Order cannot be cancelled",
                 status=400,
@@ -131,13 +131,13 @@ class OrderService:
             )
         product.stock += order.quantity
         try:
-            await db.add(product)
             await db.delete(order)
             await db.commit()
             await db.refresh(product)
             return "Order deleted successfully"
         except Exception as e:
             await db.rollback()
+            logger.error(f"Error deleting order: {e}")
             raise APIException(
                 "Failed to delete order",
                 status=500,

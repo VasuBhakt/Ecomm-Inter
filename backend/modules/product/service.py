@@ -101,6 +101,7 @@ class ProductService:
             return "Product deleted successfully"
         except Exception as e:
             await db.rollback()
+            logger.error(f"Error deleting product: {e}")
             raise APIException(
                 "Failed to delete product",
                 status=500,

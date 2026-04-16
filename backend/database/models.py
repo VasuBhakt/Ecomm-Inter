@@ -17,7 +17,6 @@ from sqlalchemy.orm import relationship
 from .database import Base
 
 
-
 # Helper for UUID strings
 def generate_uuid():
     return str(uuid4())
@@ -49,8 +48,8 @@ class User(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relationships
-    orders = relationship("Order", back_populates="buyer")
-    products = relationship("Product", back_populates="seller")
+    orders = relationship("Order", back_populates="buyer", cascade="all, delete-orphan")
+    products = relationship("Product", back_populates="seller", cascade="all, delete-orphan")
 
 
 class Product(Base):
@@ -68,7 +67,7 @@ class Product(Base):
 
     # Relationships
     seller = relationship("User", back_populates="products")
-    orders = relationship("Order", back_populates="product")
+    orders = relationship("Order", back_populates="product", cascade="all, delete-orphan")
 
 
 class Order(Base):
