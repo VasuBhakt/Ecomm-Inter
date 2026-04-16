@@ -1,96 +1,84 @@
-# Ecomm-Inter: High-Performance E-commerce Service
+# Ecomm-Inter: E-commerce Service Architecture
 
-A modern, full-stack e-commerce application built with a focus on **Asynchronous Backend Architecture**, modular design, and seamless User Experience. Developed as a technical demonstration for a robust, scalable trading platform.
+Technical implementation of a full-stack e-commerce system using an asynchronous backend architecture and modular design. Built as a demonstration of scalable trading platform principles.
 
 ---
 
 ## 🚀 Overview
 
-**Ecomm-Inter** is a platform designed for high-concurrency commerce. It features a dual-actor system (Buyers and Sellers) with real-time stock management, secure JWT-based authentication, and a modular backend structure that follows clean architecture principles.
+**Ecomm-Inter** is a platform designed for concurrently managed commerce. It features a role-based system for buyers and sellers with real-time inventory management, JWT-based authentication, and a modular backend structure following clean architecture principles.
 
 ### Key Features
 
-- **Seller Flow**: Multi-product inventory management with instant status updates.
-- **Buyer Flow**: Seamless order placement with transactional integrity (atomic stock deductions).
-- **Security**: Stateless JWT Authentication with refresh token rotation and HTTP-only cookie storage.
-- **Reliability**: Asynchronous database operations using SQLAlchemy 2.0 and PostgreSQL (NeonDB).
+- **Inventory Management**: CRUD operations for products with ownership validation.
+- **Transactional Consistency**: Order processing with atomic stock adjustments.
+- **Authentication**: Stateless JWT Authentication with refresh token rotation.
+- **Asynchronous Processing**: Non-blocking database operations via SQLAlchemy and PostgreSQL.
 
 ---
 
 ## 🛠️ Technology Stack
 
-| Layer            | Technology                                                                |
-| :--------------- | :------------------------------------------------------------------------ |
-| **Backend**      | Python 3.10+, FastAPI, SQLAlchemy (Async), PostgreSQL (Neon), Pydantic v2 |
-| **Frontend**     | Next.js 14, TypeScript, React Query (TanStack), Tailwind CSS              |
-| **Integrations** | JSON Web Tokens (JWT), Dotenv, Axios                                      |
+| Layer            | Technology                                                       |
+| :--------------- | :--------------------------------------------------------------- |
+| **Backend**      | Python, FastAPI, SQLAlchemy (Async), PostgreSQL (Neon), Pydantic |
+| **Frontend**     | Next.js, TypeScript, React Query (TanStack), Tailwind CSS        |
+| **Integrations** | JSON Web Tokens (JWT), Dotenv, Axios                             |
 
 ---
 
 ## 🏗️ Backend Architecture
 
-The backend is architected to be extensible and maintainable, utilizing a **Modular Controller-Service-Repository** pattern.
+The backend utilizes a **Modular Controller-Service-Repository** pattern for maintainability and separation of concerns.
 
 ### 1. Database Schema
 
-- **Users**: Extended with Role-Based Access Control (RBAC) (Seller vs Buyer).
-- **Products**: Detailed inventory tracking with ownership linked to sellers.
-- **Orders**: Transactional records that maintain consistency between quantity and price.
+- **Users**: Implements Role-Based Access Control (RBAC).
+- **Products**: Tracked by seller identity and current stock levels.
+- **Orders**: Transactional records ensuring data integrity between order volume and product inventory.
 
 ### 2. Implementation Highlights
 
-- **Async I/O**: Every I/O operation (DB queries, password hashing) is non-blocking, ensuring the server can handle high throughput.
-- **Transactional Integrity**: Order operations utilize SQLAlchemy sessions to ensure that if a stock update fails, the entire transaction is rolled back.
-- **Modular Routing**: Clean separation of concerns with dedicated routers for Auth, Product, and Order modules.
+- **Async I/O**: I/O operations (Database queries, password hashing) are asynchronous to maximize request throughput.
+- **Transactional Integrity**: Database operations utilize scoped sessions to ensure atomicity; failure in any step triggers a full rollback.
+- **Modular Routing**: Dedicated routers and services for Auth, Product, and Order modules.
 
 ---
 
 ## 📈 Future Roadmap & Enhancements
 
-To make this production-ready for an enterprise scale, the following improvements are planned:
+Proposed architectural improvements for enterprise-scale requirements:
 
-### 1. High-Performance Caching (Redis)
+### 1. Microservices Decomposition
 
-- **Problem**: Repeated database hits for popular product listings.
-- **Solution**: Implement a Write-Through cache using Redis for the `get_all_products` endpoint to reduce latency from ~100ms to <10ms.
+- **Objective**: Decouple the monolithic structure into independent services (Auth Service, Catalog Service, Order Service).
+- **Benefit**: Enables independent scaling, technology diversity per service, and improved fault isolation using an API Gateway for request routing.
 
-### 2. Distributed Task Queuing (Celery + RabbitMQ/Redis)
+### 2. Distributed Caching (Redis)
 
-- **Problem**: Blocking operations like sending order confirmation emails or processing heavy images.
-- **Solution**: Decouple these tasks into a background worker system using Celery, ensuring the main API thread remains responsive.
+- **Objective**: Implement a caching layer for high-traffic read operations.
+- **Benefit**: Reduces database load and latency for product retrieval by utilizing an in-memory data store.
 
-### 3. Elastic Search Integration
+### 3. Asynchronous Task Queuing (Celery + Redis/RabbitMQ)
 
-- **Problem**: SQL `LIKE` queries are inefficient for large scale product searching.
-- **Solution**: Index product metadata into Elasticsearch/Meilisearch for blazingly fast full-text search and filtering.
+- **Objective**: Offload resource-heavy operations (email notifications, report generation) to background workers.
+- **Benefit**: Ensures API responsiveness by handling time-consuming tasks outside the request-response cycle.
 
-### 4. WebSocket for Live Inventory
+### 4. Distributed Search (Elasticsearch)
 
-- **Problem**: Users seeing "In Stock" when a product just sold out.
-- **Solution**: Implement FastAPI WebSockets to push real-time stock updates to all active clients when an order is finalized.
+- **Objective**: Transition from relational database text searching to a dedicated search engine.
+- **Benefit**: Provides advanced full-text search capabilities and improved performance for complex filtering.
 
----
+### 5. WebSocket Integration
 
-## 🛠️ Development Setup
-
-### Backend
-
-1. Create a virtual environment: `python -m venv .venv`
-2. Install dependencies: `pip install -r requirements.txt`
-3. Configure `.env` with `NEONDB_DATABASE_URL` and `JWT_ACCESS_SECRET`.
-4. Run migrations: `alembic upgrade head`
-5. Start server: `python main.py`
-
-### Frontend
-
-1. Install packages: `npm install`
-2. Start dev server: `npm run dev`
+- **Objective**: Establish persistent connections for push notifications.
+- **Benefit**: Enables real-time inventory and order status updates without client-side polling.
 
 ---
 
 ## 📄 API Documentation
 
-Once the backend is running, you can access the interactive Swagger documentation at:
+The interactive Swagger documentation is available at:
 `https://ecomm-inter.onrender.com/docs`
 
 ---
