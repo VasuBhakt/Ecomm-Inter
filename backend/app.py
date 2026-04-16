@@ -23,9 +23,11 @@ app.add_middleware(
 
 from modules.auth import auth_router
 from modules.product import product_router
+from modules.order import order_router
 
 app.include_router(auth_router)
 app.include_router(product_router)
+app.include_router(order_router)
 
 
 @app.get("/")

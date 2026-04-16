@@ -30,6 +30,12 @@ async def add_product(
             status=401,
             error_code="UNAUTHORIZED",
         )
+    if not request.state.user.role == "seller":
+        raise APIException(
+            "Unauthorized to Sell Products",
+            status=401,
+            error_code="UNAUTHORIZED",
+        )
     message = await product_service.add_product(prod_request, request.state.user.id, db)
     return APIResponse(message=message, status=201)
 

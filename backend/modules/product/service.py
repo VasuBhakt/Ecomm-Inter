@@ -25,7 +25,7 @@ class ProductService:
         seller_id: str,
         db: AsyncSession = Depends(get_db),
     ) -> str:
-        new_product = ProductResponse(
+        new_product = Product(
             name=request.name,
             description=request.description,
             price=request.price,
