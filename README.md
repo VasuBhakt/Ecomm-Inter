@@ -19,11 +19,11 @@ Technical implementation of a full-stack e-commerce system using an asynchronous
 
 ## 🛠️ Technology Stack
 
-| Layer            | Technology                                                       |
-| :--------------- | :--------------------------------------------------------------- |
-| **Backend**      | Python, FastAPI, SQLAlchemy (Async), PostgreSQL (Neon), Pydantic |
-| **Frontend**     | Next.js, TypeScript, React Query (TanStack), Tailwind CSS        |
-| **Integrations** | JSON Web Tokens (JWT), Dotenv, Axios                             |
+| Layer | Technology |
+| :--- | :--- |
+| **Backend** | ![Python](https://img.shields.io/badge/-Python-3776AB?logo=python&logoColor=white) ![FastAPI](https://img.shields.io/badge/-FastAPI-009688?logo=fastapi&logoColor=white) ![SQLAlchemy](https://img.shields.io/badge/-SQLAlchemy-D71F00?logo=sqlalchemy&logoColor=white) ![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-4169E1?logo=postgresql&logoColor=white) ![Pydantic](https://img.shields.io/badge/-Pydantic-E92063?logo=pydantic&logoColor=white) |
+| **Frontend** | ![Next.js](https://img.shields.io/badge/-Next.js-000000?logo=nextdotjs&logoColor=white) ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?logo=typescript&logoColor=white) ![React Query](https://img.shields.io/badge/-React%20Query-FF4154?logo=react-query&logoColor=white) ![Tailwind CSS](https://img.shields.io/badge/-Tailwind%20CSS-06B6D4?logo=tailwind-css&logoColor=white) ![Axios](https://img.shields.io/badge/-Axios-5A29E4?logo=axios&logoColor=white)|
+| **Security** | ![JWT](https://img.shields.io/badge/-JWT-000000?logo=json-web-tokens&logoColor=white)   |
 
 ---
 
@@ -79,6 +79,6 @@ Proposed architectural improvements for enterprise-scale requirements:
 ## 📄 API Documentation
 
 The interactive Swagger documentation is available at:
-`https://ecomm-inter.onrender.com/docs`
+<a href=https://ecomm-inter.onrender.com/docs>Swagger Docs</a>
 
 ---
