@@ -5,6 +5,7 @@ from sqlalchemy import (
     Column,
     Integer,
     Float,
+    Numeric,
     String,
     ForeignKey,
     DateTime,
@@ -63,7 +64,7 @@ class Product(Base):
     )
     name = Column(String, nullable=False)
     description = Column(String, nullable=False)
-    price = Column(Float, nullable=False)
+    price = Column(Numeric(10, 2), nullable=False)
     stock = Column(Integer, default=0)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -85,7 +86,7 @@ class Order(Base):
         String, ForeignKey("products.id", ondelete="CASCADE"), nullable=False
     )
     quantity = Column(Integer, nullable=False)
-    total_amount = Column(Float, nullable=False)
+    total_amount = Column(Numeric(10, 2), nullable=False)
     status = Column(SQLEnum(OrderStatus), default=OrderStatus.PENDING)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

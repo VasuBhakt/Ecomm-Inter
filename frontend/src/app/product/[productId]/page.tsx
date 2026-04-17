@@ -20,7 +20,8 @@ export default function ProductDetailsPage() {
   });
 
   const placeOrderMutation = useMutation({
-    mutationFn: (data: { product_id: string; quantity: number }) => OrderService.addOrder(data),
+    mutationFn: (data: { product_id: string; quantity: number }) =>
+      OrderService.addOrder(data),
     onSuccess: () => {
       router.push("/orders");
     },
@@ -50,10 +51,14 @@ export default function ProductDetailsPage() {
   if (error || !product) {
     return (
       <div className="py-32 text-center">
-        <h2 className="text-2xl font-black text-black tracking-tight">PRODUCT NOT FOUND</h2>
-        <p className="text-zinc-500 mt-2 mb-8 uppercase tracking-widest text-[10px] font-bold">The item may have been removed.</p>
-        <button 
-          onClick={() => router.push("/")} 
+        <h2 className="text-2xl font-black text-black tracking-tight">
+          PRODUCT NOT FOUND
+        </h2>
+        <p className="text-zinc-500 mt-2 mb-8 uppercase tracking-widest text-[10px] font-bold">
+          The item may have been removed.
+        </p>
+        <button
+          onClick={() => router.push("/")}
           className="px-8 py-3 bg-black text-white text-xs font-black uppercase tracking-widest rounded-full hover:bg-zinc-800 transition-all"
         >
           Return to Store
@@ -75,7 +80,12 @@ export default function ProductDetailsPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-24">
         {/* Breadcrumb */}
         <nav className="mb-12 flex items-center space-x-2 text-[10px] font-black uppercase tracking-widest text-zinc-400">
-          <button onClick={() => router.push("/")} className="hover:text-black transition-colors">Store</button>
+          <button
+            onClick={() => router.push("/")}
+            className="hover:text-black transition-colors"
+          >
+            Store
+          </button>
           <span>/</span>
           <span className="text-black">{product.name}</span>
         </nav>
@@ -88,7 +98,7 @@ export default function ProductDetailsPage() {
                 {product.name.charAt(0)}
               </span>
               <div className="absolute inset-0 flex items-center justify-center">
-                 <div className="w-1/2 h-1/2 border-2 border-black/5 rounded-full animate-pulse" />
+                <div className="w-1/2 h-1/2 border-2 border-black/5 rounded-full animate-pulse" />
               </div>
             </div>
           </div>
@@ -103,78 +113,106 @@ export default function ProductDetailsPage() {
                 <span className="text-3xl font-black text-black">
                   Rs. {product.price}
                 </span>
-                <span className={`text-[10px] font-black uppercase tracking-[0.2em] px-4 py-1.5 rounded-full border ${product.stock > 0 ? 'border-green-100 bg-green-50/50 text-green-700' : 'border-red-100 bg-red-50/50 text-red-700'}`}>
-                  {product.stock > 0 ? `${product.stock} available` : 'Sold Out'}
+                <span
+                  className={`text-[10px] font-black uppercase tracking-[0.2em] px-4 py-1.5 rounded-full border ${product.stock > 0 ? "border-green-100 bg-green-50/50 text-green-700" : "border-red-100 bg-red-50/50 text-red-700"}`}
+                >
+                  {product.stock > 0
+                    ? `${product.stock} available`
+                    : "Sold Out"}
                 </span>
               </div>
             </div>
 
             <div className="mb-12">
-              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-300 block mb-4">Product Overview</label>
+              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-300 block mb-4">
+                Product Overview
+              </label>
               <p className="text-zinc-600 text-lg md:text-xl font-medium leading-relaxed max-w-xl">
                 {product.description}
               </p>
             </div>
 
             {/* Ordering Section */}
-            <div className="mt-auto pt-10 border-t border-black/5">
-              {product.stock > 0 ? (
-                <div className="space-y-8">
-                  <div className="flex flex-wrap gap-8">
-                    <div className="space-y-3">
-                       <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Select Quantity</label>
-                       <div className="flex items-center border-2 border-black rounded-2xl overflow-hidden h-14 w-32">
-                          <button 
-                            onClick={() => setQuantity(q => Math.max(1, q - 1))}
+            {user?.role == "buyer" ? (
+              <div className="mt-auto pt-10 border-t border-black/5">
+                {product.stock > 0 ? (
+                  <div className="space-y-8">
+                    <div className="flex flex-wrap gap-8">
+                      <div className="space-y-3">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400">
+                          Select Quantity
+                        </label>
+                        <div className="flex items-center border-2 border-black rounded-2xl overflow-hidden h-14 w-32">
+                          <button
+                            onClick={() =>
+                              setQuantity((q) => Math.max(1, q - 1))
+                            }
                             className="flex-1 h-full hover:bg-zinc-50 transition-colors font-bold text-xl"
                           >
                             -
                           </button>
-                          <span className="w-10 text-center font-black text-lg">{quantity}</span>
-                          <button 
-                            onClick={() => setQuantity(q => Math.min(product.stock, q + 1))}
+                          <span className="w-10 text-center font-black text-lg">
+                            {quantity}
+                          </span>
+                          <button
+                            onClick={() =>
+                              setQuantity((q) => Math.min(product.stock, q + 1))
+                            }
                             className="flex-1 h-full hover:bg-zinc-50 transition-colors font-bold text-xl"
                           >
                             +
                           </button>
-                       </div>
-                    </div>
-                    
-                    <div className="space-y-3">
-                       <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Checkout Price</label>
-                       <div className="h-14 flex items-center text-3xl font-black">
+                        </div>
+                      </div>
+
+                      <div className="space-y-3">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400">
+                          Checkout Price
+                        </label>
+                        <div className="h-14 flex items-center text-3xl font-black">
                           Rs. {product.price * quantity}
-                       </div>
+                        </div>
+                      </div>
                     </div>
+
+                    <button
+                      onClick={handleOrder}
+                      disabled={placeOrderMutation.isPending}
+                      className="w-full py-6 bg-black text-white text-sm font-black uppercase tracking-[0.3em] rounded-2xl hover:bg-zinc-800 transition-all transform active:scale-[0.99] disabled:bg-zinc-200 shadow-xl shadow-black/5 flex items-center justify-center gap-4"
+                    >
+                      {placeOrderMutation.isPending ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                          <span>Validating...</span>
+                        </>
+                      ) : (
+                        "Place Instant Order"
+                      )}
+                    </button>
                   </div>
+                ) : (
+                  <div className="py-8 bg-zinc-50 rounded-3xl border border-dashed border-zinc-200 text-center">
+                    <p className="text-zinc-400 font-black uppercase tracking-widest text-xs">
+                      Currently Unavailable
+                    </p>
+                  </div>
+                )}
 
-                  <button
-                    onClick={handleOrder}
-                    disabled={placeOrderMutation.isPending}
-                    className="w-full py-6 bg-black text-white text-sm font-black uppercase tracking-[0.3em] rounded-2xl hover:bg-zinc-800 transition-all transform active:scale-[0.99] disabled:bg-zinc-200 shadow-xl shadow-black/5 flex items-center justify-center gap-4"
-                  >
-                    {placeOrderMutation.isPending ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                        <span>Validating...</span>
-                      </>
-                    ) : 'Place Instant Order'}
-                  </button>
+                <div className="mt-10 flex items-center justify-between text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-400 border-t border-black/5 pt-6">
+                  <span>Secure Payments</span>
+                  <span className="text-zinc-200">•</span>
+                  <span>Fast Delivery</span>
+                  <span className="text-zinc-200">•</span>
+                  <span>Quality Assured</span>
                 </div>
-              ) : (
-                <div className="py-8 bg-zinc-50 rounded-3xl border border-dashed border-zinc-200 text-center">
-                  <p className="text-zinc-400 font-black uppercase tracking-widest text-xs">Currently Unavailable</p>
-                </div>
-              )}
-
-              <div className="mt-10 flex items-center justify-between text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-400 border-t border-black/5 pt-6">
-                <span>Secure Payments</span>
-                <span className="text-zinc-200">•</span>
-                <span>Fast Delivery</span>
-                <span className="text-zinc-200">•</span>
-                <span>Quality Assured</span>
               </div>
-            </div>
+            ) : (
+              <div className="mt-auto pt-10 border-t border-black/5">
+                <p className="text-zinc-400 font-black uppercase tracking-widest text-xs">
+                  You are not authorized to place orders
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </main>
